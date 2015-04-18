@@ -6,16 +6,13 @@ var throttle = (function() {
 
 		return function () {
 			if (intervalId) {
-				lastCall = {
-					context: this,
-					args: arguments
-				};
+				lastCall = [this, arguments];
 			}
 			else {
 				fn.apply(this, arguments);
 				intervalId = window.setInterval(function() {
 					if (lastCall) {
-						fn.apply(lastCall.context, lastCall.args);
+						fn.apply(lastCall[0], lastCall[1]);
 						lastCall = null;
 					}
 					else {
@@ -25,7 +22,6 @@ var throttle = (function() {
 				}, interval);
 			}
 		}
-		return fn;
 	}
 
 	return throttle;
