@@ -1,24 +1,27 @@
-var throttle = (function() {
+var throttle = (function () {
 
 	function throttle(fn, interval) {
-		var intervalId = null;
-		var lastCall = null;
+		var _window = window;
+		var intervalId;
+		var lastCall;
 
 		return function () {
+			var _this = this;
+			var _arguments = arguments;
 			if (intervalId) {
-				lastCall = [this, arguments];
+				lastCall = [_this, _arguments];
 			}
 			else {
-				fn.apply(this, arguments);
-				intervalId = window.setInterval(function() {
+				fn.apply(_this, _arguments);
+				intervalId = _window.setInterval(function () {
 					if (lastCall) {
 						fn.apply(lastCall[0], lastCall[1]);
-						lastCall = null;
 					}
 					else {
-						window.clearInterval(intervalId);
-						lastCall = null;
+						_window.clearInterval(intervalId);
+						intervalId = null;
 					}
+					lastCall = null;
 				}, interval);
 			}
 		}
