@@ -6,11 +6,10 @@ describe('Throttle', function () {
 		fn = sandbox.stub();
 		interval = 100;
 		throttled = throttle(fn, interval);
-		clock = sinon.useFakeTimers();
+		clock = sandbox.useFakeTimers();
 	});
 
 	afterEach(function () {
-		clock.restore();
 		sandbox.restore();
 	});
 
@@ -75,5 +74,19 @@ describe('Throttle', function () {
 		clock.tick(interval);
 		throttled(2);
 		assert(second.calledOnce, 'second function should have been called immediately');
-	})
+	});
+
+	it('should not interfere with other throttled functions', function () {
+		var fn2 = sandbox.stub();
+		var throttled2 = throttle(fn2, interval);
+		throttled(1);
+		throttled2(2);
+		throttled(3);
+		throttled2(4);
+		clock.tick(interval);
+		assert.equal(fn.firstCall.args[0], 1, 'first call to first function was with expected argument');
+		assert.equal(fn2.firstCall.args[0], 2, 'first call to second function was with expected argument');
+		assert.equal(fn.secondCall.args[0], 3, 'second call to first function was with expected argument');
+		assert.equal(fn2.secondCall.args[0], 4, 'second call to second function was with expected argument');
+	});
 });

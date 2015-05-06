@@ -1,27 +1,28 @@
 var throttle = (function () {
 
 	function throttle(fn, interval) {
-		var _window = window;
 		var intervalId;
-		var lastCall;
+		var isCallPending;
+		var context;
+		var args;
 
 		return function () {
-			var _this = this;
-			var _arguments = arguments;
+			context = this;
+			args = arguments;
 			if (intervalId) {
-				lastCall = [_this, _arguments];
+				isCallPending = true;
 			}
 			else {
-				fn.apply(_this, _arguments);
-				intervalId = _window.setInterval(function () {
-					if (lastCall) {
-						fn.apply(lastCall[0], lastCall[1]);
+				fn.apply(context, args);
+				intervalId = setInterval(function () {
+					if (isCallPending) {
+						fn.apply(context, args);
 					}
 					else {
-						_window.clearInterval(intervalId);
+						clearInterval(intervalId);
 						intervalId = null;
 					}
-					lastCall = null;
+					isCallPending = false;
 				}, interval);
 			}
 		}
