@@ -1,4 +1,4 @@
-describe('Throttle', function () {
+describe('throttle', function () {
 	var sandbox, clock, fn, interval, throttled;
 
 	beforeEach(function () {
@@ -40,18 +40,20 @@ describe('Throttle', function () {
 		assert(fn.secondCall.calledOn(context2), 'second call was with expected context');
 	});
 
-	it('should defer second call until the interval period', function () {
+	it('should delay second call until the interval period', function () {
 		var first = fn.withArgs(1);
 		var second = fn.withArgs(2);
 		throttled(1);
 		throttled(2);
+		assert(first.calledOnce, 'first function should be called immediately');
 		assert(second.notCalled, 'second function should not be called');
 		clock.tick(interval - 1);
 		assert(second.notCalled, 'second function should still not have been called once');
 		clock.tick(1);
 		assert(second.calledOnce, 'second function should now have been called');
 		clock.tick(interval);
-		assert(second.calledOnce, 'function should not be called again');
+		assert(second.calledOnce, 'second function should not be called again');
+		assert(first.calledOnce, 'first function should not be called again');
 	});
 
 	it('should use latest call when throttling', function () {
@@ -62,9 +64,12 @@ describe('Throttle', function () {
 		throttled(2);
 		throttled(3);
 		assert(first.calledOnce, 'first function should have been called immediately');
+		assert(second.notCalled, 'second function should not have been called before interval');
+		assert(third.notCalled, 'third function should not have been called before interval');
 		clock.tick(interval);
-		assert(second.notCalled, 'second function should not have been called');
-		assert(third.calledOnce, 'third function should have been called');
+		assert(first.calledOnce, 'first function should not have been called again after interval');
+		assert(second.notCalled, 'second function should not have been called after interval');
+		assert(third.calledOnce, 'third function should have been called after interval');
 	});
 
 	it('should call function immediately if called after interval', function () {

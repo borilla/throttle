@@ -1,4 +1,4 @@
-module.exports = function(config) {
+module.exports = function (config) {
 	config.set({
 		basePath: '.',
 		frameworks: [
@@ -8,10 +8,9 @@ module.exports = function(config) {
 		],
 		files: [
 			'development/*.js',
-			'karma/*.js',
+			'karma/*.js'
 		],
 		exclude: [
-			'test/**'
 		],
 		preprocessors: {
 			'development/*.js': 'coverage'
