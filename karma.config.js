@@ -8,7 +8,7 @@ module.exports = function (config) {
 		],
 		files: [
 			'development/*.js',
-			'karma/*.js'
+			'test/*.js'
 		],
 		exclude: [
 		],
