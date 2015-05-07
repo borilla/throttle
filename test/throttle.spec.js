@@ -94,4 +94,34 @@ describe('throttle', function () {
 		assert.equal(fn.secondCall.args[0], 3, 'second call to first function was with expected argument');
 		assert.equal(fn2.secondCall.args[0], 4, 'second call to second function was with expected argument');
 	});
+
+	describe('onComplete callback', function() {
+		var onComplete;
+
+		beforeEach(function () {
+			onComplete = sandbox.stub();
+			throttled = throttle(fn, interval, onComplete);
+		});
+
+		it('should be invoked after last throttled call', function () {
+			throttled(1);
+			throttled(2);
+			assert(onComplete.notCalled, 'callback should not be called before interval');
+			clock.tick(interval);
+			assert(onComplete.notCalled, 'callback should still not be called after interval');
+			clock.tick(interval);
+			assert(onComplete.calledOnce, 'callback should have been called after second interval');
+		});
+
+		it('should be invoked with same context and args as last throttled call', function () {
+			var context1 = {};
+			var context2 = {};
+			throttled.call(context1, 1, 11, 111);
+			throttled.call(context2, 2, 22, 222);
+			clock.tick(interval);
+			clock.tick(interval);
+			assert(onComplete.calledOn(context2), 'callback should have been called with correct context');
+			assert(onComplete.calledWith(2, 22, 222), 'callback should have been called with correct args');
+		});
+	});
 });
