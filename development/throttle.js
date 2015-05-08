@@ -1,4 +1,4 @@
-function throttle(fn, interval, onComplete) {
+function throttle(fn, interval) {
 	var intervalId;
 	var isCallPending;
 	var context;
@@ -19,7 +19,6 @@ function throttle(fn, interval, onComplete) {
 				else {
 					clearInterval(intervalId);
 					intervalId = null;
-					onComplete && onComplete.apply(context, args);
 				}
 				isCallPending = false;
 			}, interval);
