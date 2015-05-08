@@ -7,6 +7,7 @@ function throttle(fn, interval) {
 	return function () {
 		context = this;
 		args = arguments;
+
 		if (intervalId) {
 			isCallPending = true;
 		}

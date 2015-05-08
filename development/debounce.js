@@ -1,4 +1,4 @@
-function debounce(fn, interval) {
+function debounce(fn, interval, immediate) {
 	var timeoutId;
 	var context;
 	var args;
@@ -6,11 +6,17 @@ function debounce(fn, interval) {
 	return function () {
 		context = this;
 		args = arguments;
+
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 		}
+		else {
+			immediate && fn.apply(context, args);
+		}
+
 		timeoutId = setTimeout(function () {
-			fn.apply(context, args);
+			timeoutId = null;
+			immediate || fn.apply(context, args);
 		}, interval);
 	}
 }
