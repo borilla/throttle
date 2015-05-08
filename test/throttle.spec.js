@@ -94,4 +94,28 @@ describe('throttle', function () {
 		assert.equal(fn.secondCall.args[0], 3, 'second call to first function was with expected argument');
 		assert.equal(fn2.secondCall.args[0], 4, 'second call to second function was with expected argument');
 	});
+
+	describe('when delay option is set', function () {
+		beforeEach(function () {
+			throttled = throttle(fn, interval, true);
+		});
+
+		it('should not call function immediately', function () {
+			throttled();
+			assert.equal(fn.callCount, 0, 'function should not have been called immediately');
+			clock.tick(interval);
+			assert.equal(fn.callCount, 1, 'function should have been called after interval');
+		});
+
+		it('should invoke function with context and args from latest call within interval', function () {
+			var context1 = {};
+			var context2 = {};
+			throttled.call(context1, 1, 11, 111);
+			throttled.call(context2, 2, 22, 222);
+			clock.tick(interval);
+			assert.equal(fn.callCount, 1, 'should have been called once');
+			assert(fn.calledOn(context2), 'should have been called with expected context');
+			assert(fn.calledWith(2, 22, 222), 'should have been called with expected args');
+		});
+	});
 });

@@ -1,4 +1,4 @@
-function throttle(fn, interval) {
+function throttle(fn, interval, delay) {
 	var intervalId;
 	var isCallPending;
 	var context;
@@ -12,7 +12,13 @@ function throttle(fn, interval) {
 			isCallPending = true;
 		}
 		else {
-			fn.apply(context, args);
+			if (delay) {
+				isCallPending = true;
+			}
+			else {
+				fn.apply(context, args);
+			}
+
 			intervalId = setInterval(function () {
 				if (isCallPending) {
 					fn.apply(context, args);

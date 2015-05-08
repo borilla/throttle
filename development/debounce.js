@@ -10,13 +10,15 @@ function debounce(fn, interval, immediate) {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 		}
-		else {
-			immediate && fn.apply(context, args);
+		else if (immediate) {
+			fn.apply(context, args);
 		}
 
 		timeoutId = setTimeout(function () {
 			timeoutId = null;
-			immediate || fn.apply(context, args);
+			if (!immediate) {
+				fn.apply(context, args);
+			}
 		}, interval);
 	}
 }

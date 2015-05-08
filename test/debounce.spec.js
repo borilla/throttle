@@ -17,7 +17,7 @@ describe('debounce', function () {
 		assert.isFunction(debounced);
 	});
 
-	describe('when called without immediate flag', function () {
+	describe('when called with immediate option unset', function () {
 		it('should delay calling the wrapped function when called', function () {
 			debounced();
 			assert(fn.notCalled, 'function should not have been called immediately');
@@ -69,7 +69,7 @@ describe('debounce', function () {
 		});
 	});
 
-	describe.only('when called with immediate flag', function () {
+	describe('when called with immediate option set', function () {
 		beforeEach(function () {
 			debounced = debounce(fn, interval, true);
 		});
